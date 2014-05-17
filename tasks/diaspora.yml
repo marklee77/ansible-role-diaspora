@@ -1,0 +1,107 @@
+---
+- name: ensure dependencies available through apt are installed
+  apt: 
+    pkg: "{{ item }}" 
+    state: latest 
+    update_cache: yes 
+    cache_valid_time: 600
+  with_items:
+    - build-essential
+    - curl
+    - git 
+    - imagemagick
+    - libcurl4-openssl-dev
+    - libmagickwand-dev
+    - libmysqlclient-dev
+    - libxml2-dev
+    - libxslt1-dev
+    - nodejs
+    - redis-server
+    - ruby
+
+- name: ensure that diaspora group exists
+  group:
+    name: diaspora
+    state: present
+
+- name: ensure that diaspora user exits
+  user:
+    name: diaspora
+    group: diaspora
+    home: /srv/diaspora
+    createhome: no
+    shell: /bin/bash
+    comment: diaspora user
+    state: present
+
+- name: check diaspora out of git repository
+  git:
+    repo: https://github.com/diaspora/diaspora.git
+    dest: /srv/diaspora
+    update: yes
+  notify:
+    - restart diaspora
+
+- name: ensure /srv/diaspora ownership is correct
+  file:
+    path: /srv/diaspora
+    owner: diaspora
+    group: diaspora
+    recurse: yes
+
+#- name: ensure gitlabhq_production database is present
+#  mysql_db: 
+#    name: gitlabhq_production
+
+#- name: ensure git database user is present
+#  mysql_user: 
+#    name: git
+#    host: "{{ item }}" 
+#    password: "{{ gitlab_git_mysql_password }}" 
+#    priv: gitlabhq_production.*:ALL
+#  with_items:
+#    - "%"
+#    - localhost
+
+- name: copy .my.cnf file with diaspora password credentials
+  template:
+    src: srv/diaspora/.my.cnf
+    dest: /srv/diaspora/.my.cnf
+    owner: diaspora
+    group: diaspora
+    mode: 0600
+
+#- name: update database.yml from template
+#  template:
+#    src: srv/diaspora/config/database.yml
+#    dest: /srv/diaspora/config/database.yml
+#    owner: diaspora
+#    group: diaspora
+#    mode: 0600
+#  notify:
+#    - restart diaspora
+
+#- name: ensure diaspora is started and enabled
+#  service:
+#    name: diaspora
+#    state: started
+#    enabled: yes
+
+#- name: update gitlab nginx configuration from template
+#  template:
+#    src: etc/nginx/sites-available/gitlab
+#    dest: /etc/nginx/sites-available/gitlab
+#    owner: root
+#    group: root
+#    mode: 0644
+#  notify:
+#    - restart nginx
+
+#- name: enable gitlab nginx configuration
+#  file:
+#    src: ../sites-available/gitlab
+#    path: /etc/nginx/sites-enabled/gitlab
+#    state: link
+#  notify:
+#    - restart nginx
+

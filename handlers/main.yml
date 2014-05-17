@@ -1,7 +1,7 @@
 ---
-- name: restart gitlab
+- name: restart diaspora
   service:
-    name: gitlab
+    name: diaspora
     state: restarted
  
 - name: restart nginx

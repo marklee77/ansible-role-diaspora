@@ -1,4 +1,4 @@
-# GITLAB
+# diaspora
 # Maintainer: @randx
 
 # CHUNKED TRANSFER
@@ -15,33 +15,33 @@
 # [1] https://github.com/agentzh/chunkin-nginx-module#status
 # [2] https://github.com/agentzh/chunkin-nginx-module
 
-upstream gitlab {
-  server unix:/home/git/gitlab/tmp/sockets/gitlab.socket;
+upstream diaspora {
+  server unix:/home/git/diaspora/tmp/sockets/diaspora.socket;
 }
 
 server {
-  listen *:{{ gitlab_port }};         # e.g., listen 192.168.1.1:80; In most cases *:80 is a good idea
-  server_name {{ gitlab_hostname }};     # e.g., server_name source.example.com;
+  listen *:{{ diaspora_port }};         # e.g., listen 192.168.1.1:80; In most cases *:80 is a good idea
+  server_name {{ diaspora_hostname }};     # e.g., server_name source.example.com;
   server_tokens off;     # don't show the version number, a security best practice
-  root /home/git/gitlab/public;
+  root /home/git/diaspora/public;
   
   # Increase this if you want to upload large attachments
   # Or if you want to accept large git objects over http
   client_max_body_size 20m;
 
-  # individual nginx logs for this gitlab vhost
-  access_log  /var/log/nginx/gitlab_access.log;
-  error_log   /var/log/nginx/gitlab_error.log;
+  # individual nginx logs for this diaspora vhost
+  access_log  /var/log/nginx/diaspora_access.log;
+  error_log   /var/log/nginx/diaspora_error.log;
 
   location / {
     # serve static files from defined root folder;.
-    # @gitlab is a named location for the upstream fallback, see below
-    try_files $uri $uri/index.html $uri.html @gitlab;
+    # @diaspora is a named location for the upstream fallback, see below
+    try_files $uri $uri/index.html $uri.html @diaspora;
   }
 
   # if a file, which is not found in the root folder is requested,
-  # then the proxy pass the request to the upsteam (gitlab unicorn)
-  location @gitlab {
+  # then the proxy pass the request to the upsteam (diaspora unicorn)
+  location @diaspora {
     # If you use https make sure you disable gzip compression 
     # to be safe against BREACH attack
     # gzip off;
@@ -55,7 +55,7 @@ server {
     proxy_set_header   X-Real-IP         $remote_addr;
     proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
 
-    proxy_pass http://gitlab;
+    proxy_pass http://diaspora;
   }
 
   # Enable gzip compression as per rails guide: http://guides.rubyonrails.org/asset_pipeline.html#gzip-compression
@@ -63,7 +63,7 @@ server {
   # See config/application.rb under "Relative url support" for the list of
   # other files that need to be changed for relative url support
   location ~ ^/(assets)/  {
-    root /home/git/gitlab/public;
+    root /home/git/diaspora/public;
     gzip_static on; # to serve pre-gzipped version
     expires max;
     add_header Cache-Control public;
