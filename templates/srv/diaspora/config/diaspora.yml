@@ -45,7 +45,7 @@ configuration: ## Section
     ## This is operating system specific.
     ## Examples, uncomment one or add your own:
     ## Debian, Ubuntu, Archlinux, Gentoo (package ca-certificates)
-    #certificate_authorities: '/etc/ssl/certs/ca-certificates.crt'
+    certificate_authorities: '/etc/ssl/certs/ca-certificates.crt'
     ## CentOS, Fedora
     #certificate_authorities: '/etc/pki/tls/certs/ca-bundle.crt'
     
@@ -139,7 +139,7 @@ configuration: ## Section
   ## Settings affecting how ./script/server behaves.
   server: ## Section
     ## The port on which the appserver should listen
-    #port: 3000
+    port: 4000
     
     ## The environment in which the server should be started by default.
     #rails_environment: 'production'

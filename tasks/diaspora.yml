@@ -60,7 +60,7 @@
     name: diaspora
     host: "{{ item }}" 
     password: "{{ diaspora_diaspora_mysql_password }}" 
-    priv: diaspora.*:ALL
+    priv: diaspora_production.*:ALL
   with_items:
     - "%"
     - localhost
@@ -96,22 +96,21 @@
 #    - restart diaspora
 
 - name: bundle install ruby gems
-  sudo_user: diaspora
-  shell: bundle install --without development test && touch .bundle_install
+  shell: bundle install --without development test RAILS_ENV=production && touch .bundle_install
          executable=/bin/bash
          chdir=/srv/diaspora
          creates=/srv/diaspora/.bundle_install
 
 - name: create database
   sudo_user: diaspora
-  shell: bundle exec rake db:create db:schema:load && touch .bundle_createdb
+  shell: bundle exec rake db:create db:schema:load RAILS_ENV=production && touch .bundle_createdb
          executable=/bin/bash
          chdir=/srv/diaspora
          creates=/srv/diaspora/.bundle_createdb
 
 - name: precompile assets
   sudo_user: diaspora
-  shell: bundle exec assets:precompile && touch .bundle_precompile
+  shell: bundle exec rake assets:precompile && touch .bundle_precompile
          executable=/bin/bash
          chdir=/srv/diaspora
          creates=/srv/diaspora/.bundle_precompile
@@ -119,12 +118,19 @@
 #  notify:
 #    - restart diaspora
 
+- name: ensure diaspora init script is installed and up to date
+  template:
+    src: etc/init/diaspora.conf
+    dest: /etc/init/diaspora.conf
+    owner: root
+    group: root
+    mode: 0644
 
-#- name: ensure diaspora is started and enabled
-#  service:
-#    name: diaspora
-#    state: started
-#    enabled: yes
+- name: ensure diaspora is started and enabled
+  service:
+    name: diaspora
+    state: started
+    enabled: yes
 
 #- name: update gitlab nginx configuration from template
 #  template:
