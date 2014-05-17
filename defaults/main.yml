@@ -1,5 +1,5 @@
 ---
 diaspora_root_mysql_password: "{{ lookup('password', inventory_dir + '/credentials/root-mysql-password') }}"
-diaspora_git_mysql_password: "{{ lookup('password', inventory_dir + '/credentials/git-mysql-password') }}"
+diaspora_diaspora_mysql_password: "{{ lookup('password', inventory_dir + '/credentials/diaspora-mysql-password') }}"
 diaspora_hostname: diaspora
 diaspora_port: 8888
