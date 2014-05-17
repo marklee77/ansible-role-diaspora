@@ -142,7 +142,7 @@ configuration: ## Section
     port: 4000
     
     ## The environment in which the server should be started by default.
-    #rails_environment: 'production'
+    rails_environment: 'production'
    
     ## Write unicorn stderr and stdout log
     #stderr_log: '/usr/local/app/diaspora/log/unicorn-stderr.log'
