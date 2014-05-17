@@ -81,6 +81,16 @@
   notify:
     - restart diaspora
 
+- name: update diaspora.yml from template
+  template:
+    src: srv/diaspora/config/diaspora.yml
+    dest: /srv/diaspora/config/diaspora.yml
+    owner: diaspora
+    group: diaspora
+    mode: 0600
+  notify:
+    - restart diaspora
+
 #- name: ensure diaspora is started and enabled
 #  service:
 #    name: diaspora
