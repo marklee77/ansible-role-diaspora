@@ -7,6 +7,7 @@
     cache_valid_time: 600
   with_items:
     - build-essential
+    - bundler
     - curl
     - git 
     - imagemagick
@@ -49,19 +50,19 @@
     group: diaspora
     recurse: yes
 
-#- name: ensure gitlabhq_production database is present
-#  mysql_db: 
-#    name: gitlabhq_production
+- name: ensure diaspora database is present
+  mysql_db: 
+    name: diaspora
 
-#- name: ensure git database user is present
-#  mysql_user: 
-#    name: git
-#    host: "{{ item }}" 
-#    password: "{{ gitlab_git_mysql_password }}" 
-#    priv: gitlabhq_production.*:ALL
-#  with_items:
-#    - "%"
-#    - localhost
+- name: ensure diaspora database user is present
+  mysql_user: 
+    name: diaspora
+    host: "{{ item }}" 
+    password: "{{ diaspora_diaspora_mysql_password }}" 
+    priv: diaspora.*:ALL
+  with_items:
+    - "%"
+    - localhost
 
 - name: copy .my.cnf file with diaspora password credentials
   template:
