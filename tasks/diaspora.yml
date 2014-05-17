@@ -40,9 +40,8 @@
     repo: https://github.com/diaspora/diaspora.git
     dest: /srv/diaspora
     update: yes
-
-#  notify:
-#    - restart diaspora
+  notify:
+    - restart diaspora
 
 - name: ensure /srv/diaspora ownership is correct
   file:
@@ -80,9 +79,8 @@
     owner: diaspora
     group: diaspora
     mode: 0600
-
-#  notify:
-#    - restart diaspora
+  notify:
+    - restart diaspora
 
 - name: update diaspora.yml from template
   template:
@@ -91,9 +89,8 @@
     owner: diaspora
     group: diaspora
     mode: 0600
-
-#  notify:
-#    - restart diaspora
+  notify:
+    - restart diaspora
 
 - name: bundle install ruby gems
   shell: bundle install --without development test RAILS_ENV=production && touch .bundle_install
@@ -114,9 +111,8 @@
          executable=/bin/bash
          chdir=/srv/diaspora
          creates=/srv/diaspora/.bundle_precompile
-
-#  notify:
-#    - restart diaspora
+  notify:
+    - restart diaspora
 
 - name: ensure diaspora init script is installed and up to date
   template:
@@ -132,21 +128,21 @@
     state: started
     enabled: yes
 
-#- name: update gitlab nginx configuration from template
-#  template:
-#    src: etc/nginx/sites-available/gitlab
-#    dest: /etc/nginx/sites-available/gitlab
-#    owner: root
-#    group: root
-#    mode: 0644
-#  notify:
-#    - restart nginx
+- name: update diaspora nginx configuration from template
+  template:
+    src: etc/nginx/sites-available/diaspora
+    dest: /etc/nginx/sites-available/diaspora
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nginx
 
-#- name: enable gitlab nginx configuration
-#  file:
-#    src: ../sites-available/gitlab
-#    path: /etc/nginx/sites-enabled/gitlab
-#    state: link
-#  notify:
-#    - restart nginx
+- name: enable diaspora nginx configuration
+  file:
+    src: ../sites-available/diaspora
+    path: /etc/nginx/sites-enabled/diaspora
+    state: link
+  notify:
+    - restart nginx
 
