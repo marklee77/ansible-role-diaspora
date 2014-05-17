@@ -2,26 +2,17 @@ mysql: &mysql
   adapter: mysql2
   host: "localhost"
   port: 3306
-  username: "root"
-  password: ""
+  username: diaspora
+  password: "{{ diaspora_diaspora_mysql_password }}"
 #  socket: /tmp/mysql.sock
   charset: utf8
   collation: utf8_bin
-
-postgres: &postgres
-  adapter: postgresql
-  host: localhost
-  port: 5432
-  username: postgres
-  password:
-  encoding: unicode
 
 # Comment the the mysql line and uncomment the postgres line
 # if you want to use postgres
 common: &common
   # Choose one of the following
   <<: *mysql
-  #<<: *postgres
 
   # Should match environment.sidekiq.concurrency
   #pool: 25
