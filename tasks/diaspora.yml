@@ -40,8 +40,9 @@
     repo: https://github.com/diaspora/diaspora.git
     dest: /srv/diaspora
     update: yes
-  notify:
-    - restart diaspora
+
+#  notify:
+#    - restart diaspora
 
 - name: ensure /srv/diaspora ownership is correct
   file:
@@ -50,9 +51,9 @@
     group: diaspora
     recurse: yes
 
-- name: ensure diaspora database is present
+- name: ensure diaspora_production database is present
   mysql_db: 
-    name: diaspora
+    name: diaspora_production
 
 - name: ensure diaspora database user is present
   mysql_user: 
@@ -79,8 +80,9 @@
     owner: diaspora
     group: diaspora
     mode: 0600
-  notify:
-    - restart diaspora
+
+#  notify:
+#    - restart diaspora
 
 - name: update diaspora.yml from template
   template:
@@ -89,8 +91,34 @@
     owner: diaspora
     group: diaspora
     mode: 0600
-  notify:
-    - restart diaspora
+
+#  notify:
+#    - restart diaspora
+
+- name: bundle install ruby gems
+  sudo_user: diaspora
+  shell: bundle install --without development test && touch .bundle_install
+         executable=/bin/bash
+         chdir=/srv/diaspora
+         creates=/srv/diaspora/.bundle_install
+
+- name: create database
+  sudo_user: diaspora
+  shell: bundle exec rake db:create db:schema:load && touch .bundle_createdb
+         executable=/bin/bash
+         chdir=/srv/diaspora
+         creates=/srv/diaspora/.bundle_createdb
+
+- name: precompile assets
+  sudo_user: diaspora
+  shell: bundle exec assets:precompile && touch .bundle_precompile
+         executable=/bin/bash
+         chdir=/srv/diaspora
+         creates=/srv/diaspora/.bundle_precompile
+
+#  notify:
+#    - restart diaspora
+
 
 #- name: ensure diaspora is started and enabled
 #  service:
