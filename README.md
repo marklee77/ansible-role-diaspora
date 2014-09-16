@@ -4,7 +4,7 @@ Role Name
 The purpose of this role is to install diaspora to a web server and enable
 access with nginx. This install uses the MySQL backend rather than Postgres. The
 diaspora server name can be specified by changing the diaspora_hostname variable
-in vars/main.yml.
+in defaults/main.yml.
 
 This has only been trusted on Ubuntu trusty. It will not work as-is on precise
 as diaspora requires ruby 1.9 and precise uses ruby 1.8 as the system binary.
@@ -41,10 +41,10 @@ your web browser.
 License
 -------
 
-Affero GPL
+GPLv2
 
 Author Information
 ------------------
 
-http://marklee77.github.io
+http://stillwell.me
 
